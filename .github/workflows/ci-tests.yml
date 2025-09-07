@@ -1,0 +1,50 @@
+name: CI • Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup uv (cache ON)
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/pyproject.toml
+            **/uv.lock
+            **/*requirements*.txt
+      - name: Installer deps (prod + dev) de manière figée
+        run: uv sync --frozen --dev
+      - name: Pytest (avec coverage XML)
+        run: uv run pytest --maxfail=1 --disable-warnings -q --cov --cov-report=xml
+      - name: Uploader les artifacts de couverture
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.python-version }}
+          path: |
+            coverage.xml
+            .coverage
+          if-no-files-found: error
+      - name: Publier sur Codecov (optionnel)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          fail_ci_if_error: true
