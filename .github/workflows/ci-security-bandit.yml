@@ -1,0 +1,21 @@
+name: CI • SAST (Bandit)
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Bandit (Code Scanning SARIF)
+        uses: PyCQA/bandit-action@v1
+        with:
+          targets: .
+          # Example: skips: "B101,B311"
