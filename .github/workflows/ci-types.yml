@@ -1,0 +1,33 @@
+name: CI • Types (mypy & pyright)
+on: [push, pull_request]
+permissions:
+  contents: read
+
+jobs:
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/pyproject.toml
+            **/uv.lock
+      - name: Installer deps (incl. stubs) via uv
+        run: uv sync --frozen --dev
+      - name: mypy --strict
+        run: uv run mypy --strict .
+
+  pyright:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # Pyright action is standalone (no need for setup-node)
+      - name: Pyright
+        uses: jakebailey/pyright-action@v2
+        with:
+          version: latest
