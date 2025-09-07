@@ -1,0 +1,24 @@
+name: CI • Security (pip-audit)
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1" # weekly on Monday 06:00 UTC
+permissions:
+  contents: read
+
+jobs:
+  pip-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      # Direct analysis of the pyproject (no need to install the project)
+      - uses: pypa/gh-action-pip-audit@v1.1.0
+        with:
+          inputs: pyproject.toml
+          # useful options:
+          # vulnerability-service: osv
+          # require-hashes: true
