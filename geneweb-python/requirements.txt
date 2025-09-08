@@ -1,0 +1,6 @@
+# List project dependencies here, one per line, pinned to exact versions.
+# Example:
+# requests==2.32.3
+# python-dotenv==1.0.1
+# To refresh after installing/upgrading packages in the venv:
+# pip freeze > requirements.txt
