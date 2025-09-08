@@ -1,0 +1,50 @@
+name: ci-ocaml-tests
+
+on:
+  push:
+    branches:
+      - "3-cicd-pipeline" # remove after PR done
+    paths:
+      - "**/*.ml"
+      - "**/*.mli"
+      - "dune"
+      - "dune-project"
+      - "*.opam"
+      - "test/**"
+  pull_request:
+    paths:
+      - "**/*.ml"
+      - "**/*.mli"
+      - "dune"
+      - "dune-project"
+      - "*.opam"
+      - "test/**"
+
+jobs:
+  ocaml:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    matrix:
+      ocaml-compiler: ["4.14.x", "5.1.x"] # adapt to the OCaml versions you support
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up OCaml
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          opam-depext: true
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          opam update
+          opam install . --deps-only -y
+
+      - name: Build project
+        run: opam exec -- dune build
+
+      - name: Run tests
+        run: opam exec -- dune runtest --no-buffer -j 2
