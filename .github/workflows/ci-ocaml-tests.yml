@@ -2,6 +2,8 @@ name: ci-ocaml-tests
 
 on:
   push:
+    branches:
+      - "3-cicd-pipeline" # remove after PR done
     paths:
       - "**/*.ml"
       - "**/*.mli"
