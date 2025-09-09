@@ -724,7 +724,7 @@ class PersonService {
 
 ---
 
-## 6. Implementation Roadmap
+<!-- ## 6. Implementation Roadmap
 
 ### 6.1 Phase 1: Foundation (Months 1-3)
 
@@ -913,7 +913,7 @@ class PersonService {
 - **Documentation**: 100% API documentation coverage
 - **Compliance**: Full GDPR compliance
 
----
+--- -->
 
 ## Conclusion
 
