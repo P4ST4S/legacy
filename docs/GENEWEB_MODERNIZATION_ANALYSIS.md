@@ -11,7 +11,7 @@ This document provides a comprehensive analysis of the Geneweb OCaml codebase an
 3. [Proposed Modern Architecture](#proposed-modern-architecture)
 4. [Migration Strategy](#migration-strategy)
 5. [Structural Changes Required](#structural-changes-required)
-6. [Implementation Roadmap](#implementation-roadmap)
+<!-- 6. [Implementation Roadmap](#implementation-roadmap) -->
 
 ---
 
